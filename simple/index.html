@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ToDo</title>
+  <script src="https://unpkg.com/vue"></script>
+  <style>
+    body {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 1.2em;
+      border-bottom: 1px solid #000;
+    }
+
+    .create-todo {
+      width: 96%;
+      padding: 1em;
+      font-size: 1.2em;
+    }
+
+    ul li a.delete {
+      float: right;
+    }
+
+    li {
+      list-style-type: none;
+      border: 1px solid grey;
+      padding: 1em;
+    }
+
+    ul {
+      padding-left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1> Todo List </h1>
+    <input class='create-todo' type='text' v-model='new_todo' v-on:keyup.enter='add_todo' placeholder="Add a task">
+    <ul>
+      <li v-for='(todo, index) in todos'> <input type='checkbox' v-on:change='markAsDone(index)' v-model='todo.checked'> {{ todo.text }} <a class='delete' v-on:click='deleteTodo(index)' href='#'> x </a></li>
+    </ul>
+
+    <h1> Completed Tasks </h1>
+    <ul>
+      <li v-for='completed_todo in completed_todos'> {{ completed_todo.text }} </li>
+    </ul>
+
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        todos: [
+          {
+            text: "Todo 1",
+            checked: false
+          }
+        ],
+        completed_todos: [
+          {
+            text: "Todo 1",
+            checked: false
+          }
+        ],
+        new_todo: ''
+      },
+
+      methods: {
+        add_todo: function() {
+          app.todos.push( {
+            text: this.new_todo,
+            checked: false
+          } )
+          this.new_todo = ''
+        },
+        deleteTodo: function(idx) {
+          if ( confirm("Please, confirm delete?") ) {
+            this.$delete(this.todos, idx)
+          }
+        },
+
+        markAsDone: function(idx) {
+          if ( this.todos[idx].checked === true ) {
+            this.completed_todos.push({
+              text: this.todos[idx].text,
+              checked: this.todos[idx].checked
+            })
+            this.todos[idx].checked = false;
+            this.$delete(this.todos, idx)
+            return true
+          }
+        }
+      },
+
+      computed: {
+      	
+      },
+
+      created() {
+      	
+      }
+    })
+  </script>
+</body>
+</html>
